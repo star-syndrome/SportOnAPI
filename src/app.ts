@@ -10,11 +10,13 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
-	res.send("SportOn Backend API is Running...");
+	res.status(200).json({
+		message: "SportOn API is running.",
+	});
 });
 
 app.get("/test-middleware", authenticate, (req, res) => {
-	res.send({
+	res.status(200).json({
 		message: "Authenticated successfully. JWT token is valid.",
 	});
 });
