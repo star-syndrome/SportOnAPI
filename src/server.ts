@@ -8,7 +8,11 @@ const PORT = process.env.PORT || "5001";
 const MONGO_URI = process.env.MONGO_URI! || "no-mongo-uri";
 
 mongoose
-	.connect(MONGO_URI)
+	.connect(MONGO_URI, {
+		family: 4, // Force IPv4 (avoids IPv6 handshake issues)
+		authSource: "admin", // Database where the MongoDB user is defined
+		retryWrites: true,
+	})
 	.then(() => {
 		console.log("Successfully connected to MongoDB");
 		app.listen(PORT, () => {
