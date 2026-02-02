@@ -7,7 +7,6 @@ export const createCategory = async (
 ): Promise<void> => {
 	try {
 		const categoryData = req.body;
-
 		if (req.file) {
 			categoryData.imageUrl = req.file.path;
 		}
@@ -18,7 +17,7 @@ export const createCategory = async (
 		res.status(201).json(category);
 	} catch (error) {
 		res.status(500).json({
-			message: "Failed to create category.",
+			message: "Failed to create category:",
 			error,
 		});
 	}
@@ -34,7 +33,7 @@ export const getCategories = async (
 		res.status(200).json(categories);
 	} catch (error) {
 		res.status(500).json({
-			message: "Failed to retrieve categories.",
+			message: "Failed to retrieve categories:",
 			error,
 		});
 	}
@@ -46,16 +45,15 @@ export const getCategoryById = async (
 ): Promise<void> => {
 	try {
 		const category = await Category.findById(req.params.id);
-
 		if (!category) {
-			res.status(404).json({ message: "Category not found" });
+			res.status(404).json({ message: "Category not found." });
 			return;
 		}
 
 		res.status(200).json(category);
 	} catch (error) {
 		res.status(500).json({
-			message: "Failed to retrieve category by ID.",
+			message: "Failed to retrieve category by ID:",
 			error,
 		});
 	}
@@ -67,7 +65,6 @@ export const updateCategory = async (
 ): Promise<void> => {
 	try {
 		const categoryData = req.body;
-
 		if (req.file) {
 			categoryData.imageUrl = req.file.path;
 		}
@@ -86,7 +83,7 @@ export const updateCategory = async (
 		res.status(200).json(category);
 	} catch (error) {
 		res.status(500).json({
-			message: "Failed to update category.",
+			message: "Failed to update category:",
 			error,
 		});
 	}
@@ -98,7 +95,6 @@ export const deleteCategory = async (
 ): Promise<void> => {
 	try {
 		const category = await Category.findByIdAndDelete(req.params.id);
-
 		if (!category) {
 			res.status(404).json({ message: "Category not found." });
 			return;
@@ -109,7 +105,7 @@ export const deleteCategory = async (
 		});
 	} catch (error) {
 		res.status(500).json({
-			message: "Failed to delete category.",
+			message: "Failed to delete category:",
 			error,
 		});
 	}

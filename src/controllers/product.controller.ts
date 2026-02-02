@@ -7,7 +7,6 @@ export const createProduct = async (
 ): Promise<void> => {
 	try {
 		const productData = req.body;
-
 		if (req.file) {
 			productData.imageUrl = req.file.path;
 		}
@@ -18,7 +17,7 @@ export const createProduct = async (
 		res.status(201).json(product);
 	} catch (error) {
 		res.status(500).json({
-			message: "Failed to create product.",
+			message: "Failed to create product:",
 			error,
 		});
 	}
@@ -36,7 +35,7 @@ export const getProducts = async (
 		res.status(200).json(products);
 	} catch (error) {
 		res.status(500).json({
-			message: "Failed to retrieve categories.",
+			message: "Failed to retrieve products:",
 			error,
 		});
 	}
@@ -48,7 +47,6 @@ export const getProductById = async (
 ): Promise<void> => {
 	try {
 		const product = await Product.findById(req.params.id).populate("category");
-
 		if (!product) {
 			res.status(404).json({ message: "Product not found." });
 			return;
@@ -57,7 +55,7 @@ export const getProductById = async (
 		res.status(200).json(product);
 	} catch (error) {
 		res.status(500).json({
-			message: "Failed to retrieve product by ID.",
+			message: "Failed to retrieve product by ID:",
 			error,
 		});
 	}
@@ -69,7 +67,6 @@ export const updateProduct = async (
 ): Promise<void> => {
 	try {
 		const productData = req.body;
-
 		if (req.file) {
 			productData.imageUrl = req.file.path;
 		}
@@ -88,7 +85,7 @@ export const updateProduct = async (
 		res.status(200).json(product);
 	} catch (error) {
 		res.status(500).json({
-			message: "Failed to update product.",
+			message: "Failed to update product:",
 			error,
 		});
 	}
@@ -100,7 +97,6 @@ export const deleteProduct = async (
 ): Promise<void> => {
 	try {
 		const product = await Product.findByIdAndDelete(req.params.id);
-
 		if (!product) {
 			res.status(404).json({ message: "Product not found." });
 			return;
@@ -111,7 +107,7 @@ export const deleteProduct = async (
 		});
 	} catch (error) {
 		res.status(500).json({
-			message: "Failed to delete product.",
+			message: "Failed to delete product:",
 			error,
 		});
 	}
