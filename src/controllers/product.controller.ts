@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Product from "../models/product.model";
+import Category from "../models/category.model";
 
 export const createProduct = async (
 	req: Request,
@@ -31,6 +32,52 @@ export const getProducts = async (
 		const products = await Product.find()
 			.populate("category")
 			.sort({ createdAt: -1 });
+
+		res.status(200).json(products);
+	} catch (error) {
+		res.status(500).json({
+			message: "Failed to retrieve products:",
+			error,
+		});
+	}
+};
+
+export const searchProduct = async (
+	req: Request,
+	res: Response,
+): Promise<void> => {
+	try {
+		const { q } = req.query;
+
+		if (!q || typeof q !== "string" || q.trim().length === 0) {
+			res.status(400).json({
+				message: "Query parameter 'q' is required",
+			});
+			return;
+		}
+
+		const escapeRegex = (str: string) =>
+			str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		const searchQuery = escapeRegex(q.trim());
+
+		const matchingCategories = await Category.find({
+			name: { $regex: searchQuery, $options: "i" },
+		})
+			.select("_id")
+			.lean();
+
+		const categoryIds = matchingCategories.map((cat) => cat._id);
+
+		const products = await Product.find({
+			$or: [
+				{ name: { $regex: searchQuery, $options: "i" } },
+				{ category: { $in: categoryIds } },
+			],
+		})
+			.select("_id name price imageUrl category")
+			.populate("category", "name")
+			.sort({ createdAt: -1 })
+			.lean();
 
 		res.status(200).json(products);
 	} catch (error) {
